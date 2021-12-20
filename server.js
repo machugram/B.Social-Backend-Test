@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const typeDefs = require('./schema/schema')
 const resolvers = require('./resolvers/resolvers')
 require('dotenv').config()
-const { JWT_SECRET, PORT,DBURL } = process.env
+const { PORT,DBURL } = process.env
 mongoose
   .connect(DBURL, {
     useNewUrlParser: true,

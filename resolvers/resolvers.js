@@ -3,28 +3,35 @@ const jsonwebtoken = require('jsonwebtoken')
 const User = require('../models/user')
 require('dotenv').config()
 const resolvers = {
-    Query: {},
+    Query: {
+      
+    },
     Mutation: {
-      async registerUser({ username, email, password }) {
+      async registerUser(_, { username, email, password }) {
+        
         try {
-        const findUser = await User.findOne({ email: email})
-        if(findUser){
+          const foundUser = await User.findOne({email:email})
+          if(foundUser){
+            console.log(foundUser);
             return {
-            id: findUser.id, username: findUser.username, email: findUser.email, message: "Email is already used. Forgot Password?"
+              user:foundUser, message: "User already exists. Forgot Password?"
             }
-        }
+          }
           const user = await User.create({
             username,
             email,
             password: await bcrypt.hash(password, 10)
           })
+          console.log(user)
+
           const token = jsonwebtoken.sign(
             { id: user.id, email: user.email},
             process.env.JWT_SECRET,
             { expiresIn: '1y' }
           )
+          console.log(token)
           return {
-            token, id: user.id, username: user.username, email: user.email, message: "Authentication succesfull"
+            token, id: 89900, username: username, email: email, message: "Authentication succesfull"
           }
         } catch (error) {
             console.log(error)
@@ -33,6 +40,7 @@ const resolvers = {
       },
       async login(_, { email, password }) {
         try {
+          console.log("Hi")
           const user = await User.findOne({ email: email})
           console.log(user);
 
